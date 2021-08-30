@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 969f7cfde1a4e32428395fd6e6370030
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - leftDoor: {instanceID: 0}
+  - rightDoor: {instanceID: 0}
+  - topDoor: {instanceID: 0}
+  - bottomDoor: {instanceID: 0}
+  - doorColor: {fileID: 15303, guid: 0000000000000000f000000000000000, type: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
