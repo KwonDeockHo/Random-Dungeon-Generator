@@ -2,7 +2,7 @@
 Demo Games Using Unity. 
 [The Binding of Isaac ] - Map Create Algorithm 
 
-<a href="https://blog.naver.com/kon9383" target="_blank">Detail</a>
+<a href="https://blog.naver.com/kon9383/222489097528" target="_blank">Detail</a>
 
 아이작에서 사용하는 Dungeon을 모티브로 하여 재구성한 소스 코드 입니다.
 
