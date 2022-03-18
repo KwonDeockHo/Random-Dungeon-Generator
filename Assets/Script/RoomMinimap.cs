@@ -55,7 +55,6 @@ public class RoomMinimap : MonoBehaviour
     
     public void VisitiedRoom(bool boolean, bool currBool)
     {
-
         transform.gameObject.SetActive(boolean);
         if (currBool)
         {

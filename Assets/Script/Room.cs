@@ -9,38 +9,38 @@ public class Room : MonoBehaviour
     public int Width;
     public int Height;
 
-    public Vector3Int currPos;
-    public Vector3Int parentPos;
-    public Vector3 CenterPos;
-
     public string roomName;
     public string roomType;
     public string roomId;
 
-    public int weight;
+    public Vector3Int center_Position;
+    public Vector3Int parent_Position;
+    public Vector3 mergeCenter_Position;
 
-    public bool updatedWalls = false;
-    public bool visitedRoom = false;
-    public GameObject Door;
-    public GameObject Wall;
+    public int distance;
+
+    public bool isUpdatedWalls = false;
+    public bool isVisitedRoom = false;
+    public GameObject prefabsDoor;
+    public GameObject prefabsWall;
 
 
     public Room(int x, int y, int z)
     {
-        currPos.x = x;
-        currPos.y = y;
-        currPos.z = z;
+        center_Position.x = x;
+        center_Position.y = y;
+        center_Position.z = z;
     }
 
-    public SubRoom rooms;
+    public SubRoom childRooms;
 
-    public bool updateRooms = false;
+    public bool updateRoomStatus = false;
 
 
     // Room을 생성 시 초기에 호출(Start)
-    public void setUpdateWalls(bool setup)
+    public void SetUpdateWalls(bool setup)
     {
-        updatedWalls = setup;
+        isUpdatedWalls = setup;
     }
 
     void Start()
@@ -51,43 +51,43 @@ public class Room : MonoBehaviour
             return;
         }
 
-        rooms = GetComponentInChildren<SubRoom>();
+        childRooms = GetComponentInChildren<SubRoom>();
 
-        if (rooms != null)
+        if (childRooms != null)
         {
-            rooms.currPos   = currPos;
-            rooms.roomType  = roomType;
-            rooms.Width     = Width;
-            rooms.Height    = Height;
-            rooms.roomName  = roomName;
-            rooms.parentPos = parentPos;
-            rooms.CenterPos = CenterPos;
+            childRooms.center_Position       = center_Position;
+            childRooms.roomType              = roomType;
+            childRooms.Width                 = Width;
+            childRooms.Height                = Height;
+            childRooms.roomName              = roomName;
+            childRooms.parent_Position       = parent_Position;
+            childRooms.mergeCenter_Position  = mergeCenter_Position;
 
         }
 
-        updatedWalls = false;
+        isUpdatedWalls = false;
     }
 
     public void RemoveUnconnectedWalls()
     {
-        if (rooms != null)
-            rooms.RemoveUnconnectedWalls();
+        if (childRooms != null)
+            childRooms.RemoveUnconnectedWalls();
     }
 
     void Update()
     {
-        if (!updatedWalls)
+        if (!isUpdatedWalls)
         {
             RemoveUnconnectedWalls();
 
-            updatedWalls = true;
+            isUpdatedWalls = true;
         }
     }
 
 
     public Vector3 GetRoomCenter()
     {
-        return new Vector3(currPos.x, 0, currPos.z);
+        return new Vector3(center_Position.x, 0, center_Position.z);
     }
 
     private void OnTriggerEnter(Collider collision)

@@ -213,7 +213,7 @@ MonoBehaviour:
   speed: 7.5
   horizontal: 0
   vertical: 0
-  moveBool: 1
+  isMoveStatus: 1
 --- !u!65 &100108660
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -420,19 +420,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd871b6cc811e09408f9a0e26f44b8a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentWorldName: Basement
+  globalRoomTitle: Basement
   currRoom: {fileID: 0}
   loadedRooms: []
-  roomPrefabs: {fileID: 1157577942537428037, guid: 929aab6f859c6de4c82c5a3f7a36a411,
-    type: 3}
-  isLoadingRoom: 0
-  spawnedBossRoom: 0
-  spawnedMergeRoom: 0
-  updatedRooms: 0
-  createRoom: 0
   DefaultBackground: {fileID: 2100000, guid: 931042b1f325a70469e870b841d832d2, type: 2}
   VisitedBack: {fileID: 2100000, guid: d1ca8ec6116fd864a87b8a94a429bf66, type: 2}
   currMaterial: {fileID: 2100000, guid: 429d11c6ae9df244281d55bdf9b9ed33, type: 2}
+  isLoadingRoom: 0
 --- !u!4 &271386819
 Transform:
   m_ObjectHideFlags: 0
@@ -855,11 +849,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ba0892400c0b3542bc3341a17a8ce73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fadeImg: {fileID: 187325424}
-  isInTransition: 0
-  transition: 0
-  isShowing: 0
-  fadeDuration: 1
+  fadeBackground: {fileID: 187325424}
+  fadeChange_value: 0
+  isShowInOut: 0
+  isFadeChanging: 0
+  fadeDurationUnit: 0.001
 --- !u!1 &1439593145
 GameObject:
   m_ObjectHideFlags: 0
@@ -923,7 +917,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 271386818}
-        m_MethodName: newCreatedRoom
+        m_MethodName: CreatedRoom
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1268,14 +1262,13 @@ MonoBehaviour:
   - {x: 1, y: 0, z: -1}
   - {x: -1, y: 0, z: 1}
   - {x: 1, y: 0, z: 1}
-  shortParentRoot: []
   minRoomCnt: 8
   maxRoomCnt: 10
   currRoomCnt: 0
   maxDistance: 6
-  mainRoomCount: 0
-  startPoint: {x: 0, y: 0, z: 0}
-  BossPoint: {x: 0, y: 0, z: 0}
+  validRoomCount: 0
+  startRoomPosition: {x: 0, y: 0, z: 0}
+  bossRoomPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &1906295435
 GameObject:
   m_ObjectHideFlags: 0

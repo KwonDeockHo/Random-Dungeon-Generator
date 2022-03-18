@@ -8,6 +8,7 @@ public class RoomPrefabsSet : Singleton<RoomPrefabsSet>
     public Dictionary<string, GameObject> roomPrefabs = new Dictionary<string, GameObject>();
     public List<string> roomPrefabsName;
     public List<GameObject> roomPrefabsList;
+
     // Start is called before the first frame update
     void Awake()
     {

@@ -517,19 +517,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Width: 20
   Height: 20
-  currPos: {x: 0, y: 0, z: 0}
-  parentPos: {x: 0, y: 0, z: 0}
-  CenterPos: {x: 0, y: 0, z: 0}
   roomName: 
   roomType: 
   roomId: 
-  weight: 0
-  updatedWalls: 0
-  visitedRoom: 0
-  Door: {fileID: 1024348926574438918, guid: a5fe48609da44004c8a010bae9410a2e, type: 3}
-  Wall: {fileID: 4505071639465479238, guid: ba78d2cc6f5e3f04896e829e4a8497cf, type: 3}
-  rooms: {fileID: 0}
-  updateRooms: 0
+  center_Position: {x: 0, y: 0, z: 0}
+  parent_Position: {x: 0, y: 0, z: 0}
+  mergeCenter_Position: {x: 0, y: 0, z: 0}
+  distance: 0
+  isUpdatedWalls: 0
+  isVisitedRoom: 0
+  prefabsDoor: {fileID: 1024348926574438918, guid: a5fe48609da44004c8a010bae9410a2e,
+    type: 3}
+  prefabsWall: {fileID: 4505071639465479238, guid: ba78d2cc6f5e3f04896e829e4a8497cf,
+    type: 3}
+  childRooms: {fileID: 0}
+  updateRoomStatus: 0
 --- !u!1 &1172533202093731392
 GameObject:
   m_ObjectHideFlags: 0

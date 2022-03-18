@@ -10,7 +10,8 @@ public class Player : Singleton<Player>
     public float horizontal;
     public float vertical;
 
-    public bool moveBool = true;
+    public bool isMoveStatus = true;
+
     void Start()
     {
         if (self == null)
@@ -28,7 +29,7 @@ public class Player : Singleton<Player>
 
     void Update()
     {
-        if (moveBool)
+        if (isMoveStatus)
             PlayerMove();
     }
 
@@ -36,29 +37,29 @@ public class Player : Singleton<Player>
     {
         if (collision.tag == "Door")
         {
-            FadeInOut.Instance.Fade(true, 1.35f);
+            FadeInOut.Instance.setFade(true, 1.35f);
 
             GameObject nextRoom = collision.gameObject.transform.parent.GetComponent<Door>().nextRoom;
             Door nextDoor = collision.gameObject.transform.parent.GetComponent<Door>().SideDoor;
 
-            // 진행 방향을 알면 문제해결
+            // 진행 방향을 파악 후 캐릭터 위치 지정
             Vector3 currPos = new Vector3(nextDoor.transform.position.x, 0.5f, nextDoor.transform.position.z) + (nextDoor.transform.localRotation * (Vector3.forward * 3));
 
             Player.Instance.transform.position = currPos;
 
             for (int i = 0; i < RoomController.Instance.loadedRooms.Count; i++)
             {
-                if (nextRoom.GetComponent<Room>().parentPos == RoomController.Instance.loadedRooms[i].parentPos)
+                if (nextRoom.GetComponent<Room>().parent_Position == RoomController.Instance.loadedRooms[i].parent_Position)
                 {
-                    RoomController.Instance.loadedRooms[i].rooms.gameObject.SetActive(true);
+                    RoomController.Instance.loadedRooms[i].childRooms.gameObject.SetActive(true);
                 }
                 else
                 {
-                    RoomController.Instance.loadedRooms[i].rooms.gameObject.SetActive(false);
+                    RoomController.Instance.loadedRooms[i].childRooms.gameObject.SetActive(false);
                 }
             }
 
-            FadeInOut.Instance.Fade(false, 0.15f);
+            FadeInOut.Instance.setFade(false, 0.15f);
         }
     }
 }

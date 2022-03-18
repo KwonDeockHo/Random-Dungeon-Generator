@@ -24,14 +24,14 @@ public class SubRoom : MonoBehaviour
     public Wall bottomWall;
 
     // 현재 방 위치
-    public Vector3Int currPos;
-    public Vector3Int parentPos;
-    public Vector3 CenterPos;
+    public Vector3Int center_Position;
+    public Vector3Int parent_Position;
+    public Vector3 mergeCenter_Position;
     public string wallType;
 
     public Room parentRoom;
-    public bool updatedRooms = false;
-    public bool roomPathBool = false;
+    public bool isUpdatedRooms = false;
+    public bool isRoomPathBool = false;
     public RoomMinimap minimapRoom;
 
 
@@ -96,11 +96,11 @@ public class SubRoom : MonoBehaviour
     }
     void RoomUpdate()
     {
-        if (!updatedRooms)
+        if (!isUpdatedRooms)
         {
             RemoveUnconnectedWalls();
 
-            updatedRooms = true;
+            isUpdatedRooms = true;
         }
 
         //if (updatedRooms && !roomPathBool)
@@ -111,11 +111,11 @@ public class SubRoom : MonoBehaviour
     {
         if (!roomType.Equals("Single"))
         {
-            parentRoom = RoomController.Instance.FindRoom(parentPos.x, parentPos.y, parentPos.z );
+            parentRoom = RoomController.Instance.FindRoom(parent_Position.x, parent_Position.y, parent_Position.z );
 
-            GameObject subRoom = this.gameObject;
-            subRoom.transform.SetParent(parentRoom.transform);
-            subRoom.transform.parent.GetComponent<Room>().setUpdateWalls(false);
+            GameObject tmpChildRoom = this.gameObject;
+            tmpChildRoom.transform.SetParent(parentRoom.transform);
+            tmpChildRoom.transform.parent.GetComponent<Room>().SetUpdateWalls(false);
 
 
             GameObject miniRoom = minimapRoom.gameObject;
@@ -129,15 +129,15 @@ public class SubRoom : MonoBehaviour
 
         for (int i = 0; i < RoomController.Instance.loadedRooms.Count; i++)
         {
-            if (parentPos == RoomController.Instance.loadedRooms[i].parentPos)
+            if (parent_Position == RoomController.Instance.loadedRooms[i].parent_Position)
             {
-                RoomController.Instance.loadedRooms[i].visitedRoom = true;
-                RoomController.Instance.loadedRooms[i].rooms.minimapRoom.VisitiedRoom(true, true);
-                RoomController.Instance.loadedRooms[i].rooms.minimapRoom.VisitiedCurrRoom(true);
+                RoomController.Instance.loadedRooms[i].isVisitedRoom = true;
+                RoomController.Instance.loadedRooms[i].childRooms.minimapRoom.VisitiedRoom(true, true);
+                RoomController.Instance.loadedRooms[i].childRooms.minimapRoom.VisitiedCurrRoom(true);
             }
             else
             {
-                RoomController.Instance.loadedRooms[i].rooms.minimapRoom.VisitiedCurrRoom(false);
+                RoomController.Instance.loadedRooms[i].childRooms.minimapRoom.VisitiedCurrRoom(false);
             }
         }
 
@@ -159,13 +159,13 @@ public class SubRoom : MonoBehaviour
     {
         for (int i = 0; i < RoomController.Instance.loadedRooms.Count; i++)
         {
-            if (room.parentPos == RoomController.Instance.loadedRooms[i].parentPos)
-                   RoomController.Instance.loadedRooms[i].rooms.minimapRoom.VisitiedRoom(true, false);
+            if (room.parent_Position == RoomController.Instance.loadedRooms[i].parent_Position)
+                   RoomController.Instance.loadedRooms[i].childRooms.minimapRoom.VisitiedRoom(true, false);
         }
     }
     public void RemoveUnconnectedWalls()
     {
-        Vector3 tmpCenterPos = transform.parent.gameObject.GetComponent<Room>().parentPos;
+        Vector3 tmpCenterPos = transform.parent.gameObject.GetComponent<Room>().parent_Position;
         string wallStr = "";
 
         foreach (Wall wall in walls)
@@ -176,7 +176,7 @@ public class SubRoom : MonoBehaviour
                     {
                         Room leftRoom = GetLeft();
 
-                        if (leftRoom.parentPos == tmpCenterPos)
+                        if (leftRoom.parent_Position == tmpCenterPos)
                         {
                             leftDoor.gameObject.SetActive(false);
                             leftWall.gameObject.SetActive(false);
@@ -187,13 +187,13 @@ public class SubRoom : MonoBehaviour
                         }
                         else
                         {
-                            wallStr += "L";
+                            wallStr += "Left";
                             if (!leftDoor.isUpdate)
                             {
-                                GameObject roomDoor = Instantiate(leftRoom.Door, leftDoor.transform);
+                                GameObject roomDoor = Instantiate(leftRoom.prefabsDoor, leftDoor.transform);
                                 roomDoor.gameObject.transform.SetParent(leftDoor.gameObject.transform);
                                 leftDoor.setNextRoom(leftRoom.gameObject);
-                                leftDoor.SideDoor = leftRoom.rooms.rightDoor;
+                                leftDoor.SideDoor = leftRoom.childRooms.rightDoor;
 
                                 leftDoor.isUpdate = true;
                             }
@@ -203,7 +203,7 @@ public class SubRoom : MonoBehaviour
                     {
                         if (!leftWall.isUpdate)
                         {
-                            GameObject newWall = transform.parent.GetComponent<Room>().Wall.gameObject;
+                            GameObject newWall = transform.parent.GetComponent<Room>().prefabsWall.gameObject;
                             GameObject roomWall = Instantiate(newWall, leftWall.transform);
                             leftWall.isUpdate = true;
                         }
@@ -218,7 +218,7 @@ public class SubRoom : MonoBehaviour
                     {
                         Room topRoom = GetTop();
 
-                        if (topRoom.parentPos == tmpCenterPos)
+                        if (topRoom.parent_Position == tmpCenterPos)
                         {
                             topDoor.gameObject.SetActive(false);
                             topWall.gameObject.SetActive(false);
@@ -228,13 +228,13 @@ public class SubRoom : MonoBehaviour
                         }
                         else
                         {
-                            wallStr += "T";
+                            wallStr += "Top";
                             if (!topDoor.isUpdate)
                             {
-                                GameObject roomDoor = Instantiate(topRoom.Door, topDoor.transform);
+                                GameObject roomDoor = Instantiate(topRoom.prefabsDoor, topDoor.transform);
                                 roomDoor.gameObject.transform.SetParent(topDoor.gameObject.transform);
                                 topDoor.setNextRoom(topRoom.gameObject);
-                                topDoor.SideDoor = topRoom.rooms.bottomDoor;
+                                topDoor.SideDoor = topRoom.childRooms.bottomDoor;
 
                                 topDoor.isUpdate = true;
                             }
@@ -244,7 +244,7 @@ public class SubRoom : MonoBehaviour
                     {
                         if (!topWall.isUpdate)
                         {
-                            GameObject newWall = transform.parent.GetComponent<Room>().Wall.gameObject;
+                            GameObject newWall = transform.parent.GetComponent<Room>().prefabsWall.gameObject;
                             GameObject roomWall = Instantiate(newWall, topWall.transform);
                             topWall.isUpdate = true;
                         }
@@ -257,7 +257,7 @@ public class SubRoom : MonoBehaviour
                     if (GetRight() != null)
                     {
                         Room rightRoom = GetRight();
-                        if (rightRoom.parentPos == tmpCenterPos)
+                        if (rightRoom.parent_Position == tmpCenterPos)
                         {
                             rightDoor.gameObject.SetActive(false);
                             rightWall.gameObject.SetActive(false);
@@ -268,14 +268,14 @@ public class SubRoom : MonoBehaviour
                         }
                         else
                         {
-                            wallStr += "R";
+                            wallStr += "Rright";
                             if (!rightDoor.isUpdate)
                             {
-                                GameObject roomDoor = Instantiate(rightRoom.Door, rightDoor.transform);
+                                GameObject roomDoor = Instantiate(rightRoom.prefabsDoor, rightDoor.transform);
                                 roomDoor.gameObject.transform.SetParent(rightDoor.gameObject.transform);
 
                                 rightDoor.setNextRoom(rightRoom.gameObject);
-                                rightDoor.SideDoor = rightRoom.rooms.leftDoor;
+                                rightDoor.SideDoor = rightRoom.childRooms.leftDoor;
 
                                 rightDoor.isUpdate = true;
                             }
@@ -285,7 +285,7 @@ public class SubRoom : MonoBehaviour
                     {
                         if (!rightWall.isUpdate)
                         {
-                            GameObject newWall = transform.parent.GetComponent<Room>().Wall.gameObject;
+                            GameObject newWall = transform.parent.GetComponent<Room>().prefabsWall.gameObject;
                             GameObject roomWall = Instantiate(newWall, rightWall.transform);
                             rightWall.isUpdate = true;
                         }
@@ -299,7 +299,7 @@ public class SubRoom : MonoBehaviour
                     {
                         Room bottomRoom = GetBottom();
 
-                        if (bottomRoom.parentPos == tmpCenterPos)
+                        if (bottomRoom.parent_Position == tmpCenterPos)
                         {
                             // 방이 뚫려 있다.
                             bottomDoor.gameObject.SetActive(false);
@@ -311,14 +311,14 @@ public class SubRoom : MonoBehaviour
                         }
                         else
                         {
-                            wallStr += "B";
+                            wallStr += "Bottom";
                             if (!bottomDoor.isUpdate)
                             {
-                                GameObject roomDoor = Instantiate(bottomRoom.Door, bottomDoor.transform);
+                                GameObject roomDoor = Instantiate(bottomRoom.prefabsDoor, bottomDoor.transform);
                                 roomDoor.gameObject.transform.SetParent(bottomDoor.gameObject.transform);
 
                                 bottomDoor.setNextRoom(bottomRoom.gameObject);
-                                bottomDoor.SideDoor = bottomRoom.rooms.topDoor;
+                                bottomDoor.SideDoor = bottomRoom.childRooms.topDoor;
 
                                 bottomDoor.isUpdate = true;
                             }
@@ -328,7 +328,7 @@ public class SubRoom : MonoBehaviour
 
                         if (!bottomWall.isUpdate)
                         {
-                            GameObject newWall = transform.parent.GetComponent<Room>().Wall.gameObject;
+                            GameObject newWall = transform.parent.GetComponent<Room>().prefabsWall.gameObject;
                             GameObject roomWall = Instantiate(newWall, bottomWall.transform);
                             bottomWall.isUpdate = true;
                         }
@@ -347,33 +347,33 @@ public class SubRoom : MonoBehaviour
 
     public Room GetRight()
     {
-        if (RoomController.Instance.DoesRoomExist(currPos.x + 1, currPos.y, currPos.z))
+        if (RoomController.Instance.DoesRoomExist(center_Position.x + 1, center_Position.y, center_Position.z))
         {
-            return RoomController.Instance.FindRoom(currPos.x + 1, currPos.y, currPos.z);
+            return RoomController.Instance.FindRoom(center_Position.x + 1, center_Position.y, center_Position.z);
         }
         return null;
     }
     public Room GetLeft()
     {
-        if (RoomController.Instance.DoesRoomExist(currPos.x - 1, currPos.y, currPos.z))
+        if (RoomController.Instance.DoesRoomExist(center_Position.x - 1, center_Position.y, center_Position.z))
         {
-            return RoomController.Instance.FindRoom(currPos.x - 1, currPos.y, currPos.z);
+            return RoomController.Instance.FindRoom(center_Position.x - 1, center_Position.y, center_Position.z);
         }
         return null;
     }
     public Room GetTop()
     {
-        if (RoomController.Instance.DoesRoomExist(currPos.x, currPos.y, currPos.z + 1))
+        if (RoomController.Instance.DoesRoomExist(center_Position.x, center_Position.y, center_Position.z + 1))
         {
-            return RoomController.Instance.FindRoom(currPos.x, currPos.y, currPos.z + 1);
+            return RoomController.Instance.FindRoom(center_Position.x, center_Position.y, center_Position.z + 1);
         }
         return null;
     }
     public Room GetBottom()
     {
-        if (RoomController.Instance.DoesRoomExist(currPos.x, currPos.y, currPos.z - 1))
+        if (RoomController.Instance.DoesRoomExist(center_Position.x, center_Position.y, center_Position.z - 1))
         {
-            return RoomController.Instance.FindRoom(currPos.x, currPos.y, currPos.z - 1);
+            return RoomController.Instance.FindRoom(center_Position.x, center_Position.y, center_Position.z - 1);
         }
         return null;
     }
